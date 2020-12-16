@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import AppRouter from 'components/Router';
-import {authService} from 'myBase';
+import { authService } from 'myBase';
 
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     authService.onAuthStateChanged((user) => {
-      if(user){
-        setIsLoggedIn(true);       
-      }else{
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
         setIsLoggedIn(false);
       }
-      setInit(true) ;
+      setInit(true);
     });
   }, []);
   return (
     <>
-    {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
+      {init ? <AppRouter isLoggedIn={isLoggedIn} /> : "initializing..."}
     </>
   );
 }

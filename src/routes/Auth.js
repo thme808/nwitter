@@ -8,10 +8,10 @@ const Auth = () => {
     const [error, setError] = useState("");
 
     const onChange = (e) => {
-        const {target : {name, value}} = e;
-        if(name === "email") {
+        const { target: { name, value } } = e;
+        if (name === "email") {
             setEmail(value);
-        }else if(name === "password"){
+        } else if (name === "password") {
             setPassword(value);
         }
     };
@@ -20,19 +20,19 @@ const Auth = () => {
         e.preventDefault();
         try {
             let data;
-            if(newAccount){
+            if (newAccount) {
                 //create account
                 data = await authService.createUserWithEmailAndPassword(
                     email, password
                 );
-            }else{
+            } else {
                 //log in
                 data = await authService.signInWithEmailAndPassword(
                     email, password
                 );
             }
             console.log(data);
-        }catch(error){
+        } catch (error) {
             setError(error.message);
         }
     };
@@ -44,33 +44,33 @@ const Auth = () => {
 
     //social login
     const onSocialClick = async (e) => {
-        const {target :{name}} = e;
+        const { target: { name } } = e;
         let provider;
-        if(name === "google"){
+        if (name === "google") {
             provider = new firebaseInstance.auth.GoogleAuthProvider();
-        }else if(name === "github"){
+        } else if (name === "github") {
             provider = new firebaseInstance.auth.GithubAuthProvider();
         }
 
         const authData = await authService.signInWithPopup(provider)
-        .catch(error => setError(error.message));
+            .catch(error => setError(error.message));
     }
 
     return (
         <div>
-        <form onSubmit={onSubmit}>
-            <input onChange={onChange} type="text" placeholder="Email" name="email" required value={email} />
-            <input onChange={onChange} type="password" placeholder="Password" name="password" required value={password} />
-            <input type="submit" value={newAccount ? "create account" : "sign in"} />  
-            {error}
-        </form>
-        <span onClick={toggleSignInBtn} >{newAccount ? "sign in" : "create account"}</span>
-        <div>
-            <button name="google" onClick={onSocialClick}>Continue with Google</button>
-            <button name="github" onClick={onSocialClick}>Continue with Github</button>
-        </div>
+            <form onSubmit={onSubmit}>
+                <input onChange={onChange} type="text" placeholder="Email" name="email" required value={email} />
+                <input onChange={onChange} type="password" placeholder="Password" name="password" required value={password} />
+                <input type="submit" value={newAccount ? "create account" : "sign in"} />
+                {error}
+            </form>
+            <span onClick={toggleSignInBtn} >{newAccount ? "sign in" : "create account"}</span>
+            <div>
+                <button name="google" onClick={onSocialClick}>Continue with Google</button>
+                <button name="github" onClick={onSocialClick}>Continue with Github</button>
+            </div>
         </div>
     )
 }
- 
+
 export default Auth;

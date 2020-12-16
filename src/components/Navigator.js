@@ -1,6 +1,6 @@
 import React from "react";
 
-const Navigator = () =>{
+const Navigator = () => {
     return <div>
         <ul>
             <li>home</li>
