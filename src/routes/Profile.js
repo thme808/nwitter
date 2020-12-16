@@ -1,5 +1,18 @@
 import React from "react";
+import { authService } from "myBase";
+import { useHistory } from "react-router-dom";
 
-const Profile = () => <span>Profile</span>
+const Profile = () => {
+    const history = useHistory();
+    const onLogoutClick = () => {
+        authService.signOut();
+        history.push("/");
+    }
+    return (
+        <>
+            <button onClick={onLogoutClick}>log out</button>
+        </>
+    )
+}
 
 export default Profile;
