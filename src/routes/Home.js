@@ -1,8 +1,9 @@
 import { authService } from "myBase";
 import React, { useState, useEffect } from "react";
 import { dbService } from "myBase";
+import Nweet from "components/Nweet";
 
-const Home = () => {
+const Home = ({ userObj }) => {
     const [nweet, setNweet] = useState("");
     const [nweets, setNweets] = useState([]);
 
@@ -16,19 +17,11 @@ const Home = () => {
 
         const newDocument = await dbService.collection("nweet").add(
             {
-                nweet: nweet,
-                createdAt: new Date()
+                text: nweet,
+                createdAt: new Date(),
+                createtorID: userObj.uid
             }
         )
-
-        const result = await newDocument.get();
-        const nweetObject = {
-            ...result.data(),
-            id: result.id
-        }
-        setNweets(prev => [nweetObject, ...prev])
-        setNweet("");
-
     };
 
     const getNweets = async () => {
@@ -44,14 +37,21 @@ const Home = () => {
         );
     }
 
-    // const onSnapShot = () => {
-    //     dbService.collection("nweet").onSnapshot((snapshot) => {
-    //         snapshot.forEach(document => console.log(document.data()))
-    //     })
-    // }
+    const onSnapShot = () => {
+        dbService.collection("nweet").onSnapshot((snapshot) => {
+            /* 
+            TODO: update array with changes only instead of replacing the array with new array
+            */
+            const nweetArray = snapshot.docs.map((document) => ({
+                id: document.id,
+                ...document.data(),
+            }))
+            setNweets(nweetArray);
+        })
+    }
 
     useEffect(() => {
-        getNweets();
+        onSnapShot();
     }, []);
 
     return (
@@ -67,9 +67,7 @@ const Home = () => {
             </form>
             <div>
                 {nweets.map((nweet) => (
-                    <div key={nweet.id}>
-                        <h4> {nweet.nweet} </h4>
-                    </div>
+                    <Nweet key={nweet.id} nweet={nweet} isOwner={userObj.uid === nweet.createtorID} />
                 ))}
             </div>
         </div>
